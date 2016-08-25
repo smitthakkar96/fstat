@@ -5,7 +5,7 @@ class Job(db.Model):
     url = db.Column(db.String(100))
     state = db.Column(db.Integer)
     signature = db.Column(db.String(1000), index=True)
-    os = db.Column(db.Integer, index=True)
+    job_name  = db.Column(db.Integer, index=True)
     node = db.Column(db.Integer, index=True)
     timestamp = db.Column(db.DateTime, index=True)
     db.UniqueConstraint('url', 'signature')

@@ -2,10 +2,10 @@ import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 import re
 from datetime import timedelta, datetime
-from fstat import app
+from fstat import app, db, Job
 
 
-def process_failure(url, node):
+def process_failure(url, build_info):
     text = requests.get(url, verify=False).text
     accum = []
     for t in text.split('\n'):
@@ -14,20 +14,40 @@ def process_failure(url, node):
                 if t2.find("Wstat") != -1:
                     test_case = re.search('\./tests/.*\.t', t2)
                     if test_case:
-                        summary[test_case.group()].append((url, node))
+                        failure = Job()
+                        failure.url = url
+                        failure.state = build_info['result']
+                        failure.signature = test_case.group()
+                        failure.node = build_info['builtOn']
+                        failure.timestamp = datetime.fromtimestamp(build_info['timestamp']/1000)
+                        db.session.add(failure)
+                        db.session.commit()
             accum = []
         else:
             accum.append(t)
 
 
-def get_summary(cut_off_date, reg_link):
+def get_summary(job_name, num_days):
     '''
     Get links to the failed jobs
     '''
-    for page in xrange(0, app.config['MAX_BUILDS'], 100):
+    requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+    cut_off_date = datetime.today() - timedelta(days=num_days)
+    for page in xrange(0, app.config['JENKINS_MAX'], 100):
+        print ''.join([
+                app.config['JENKINS_URL'],
+                '/job/',
+                job_name,
+                '/'
+                'api/json?depth=1&tree=allBuilds'
+                '[url,result,timestamp,builtOn]',
+                '{{{0},{1}}}'.format(page, page+100)
+        ])
         build_info = requests.get(''.join([
                 app.config['JENKINS_URL'],
-                reg_link,
+                '/job/',
+                job_name,
+                '/'
                 'api/json?depth=1&tree=allBuilds'
                 '[url,result,timestamp,builtOn]',
                 '{{{0},{1}}}'.format(page, page+100)
@@ -38,17 +58,4 @@ def get_summary(cut_off_date, reg_link):
                 return
             if build['result'] not in [None, 'SUCCESS']:
                 url = ''.join([build['url'], 'consoleText'])
-                process_failure(url, build['builtOn'])
-
-
-def main(num_days, regression_link):
-    requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
-    cut_off_date = datetime.today() - timedelta(days=num_days)
-    for reg in regression_link:
-        if reg == 'centos':
-            reg_link = '/job/centos6-regression/'
-        elif reg == 'netbsd':
-            reg_link = '/job/netbsd7-regression/'
-        else:
-            reg_link = reg
-        get_summary(cut_off_date, reg_link)
+                process_failure(url, build)
