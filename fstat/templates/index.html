@@ -1,12 +1,47 @@
-{% extends "bootstrap/base.html" %}
-{% block title %}This is an example page{% endblock %}
+{# This simple template derives from ``base.html``. See ``base.html`` for
+   more information about template inheritance. #}
+{%- extends "base.html" %}
 
-{% block navbar %}
-<div class="navbar navbar-fixed-top">
-  <!-- ... -->
-</div>
-{% endblock %}
+{# Loads some of the macros included with Flask-Bootstrap. We are using the
+   utils module here to automatically render Flask's flashed messages in a
+   bootstrap friendly manner #}
+{% import "bootstrap/utils.html" as utils %}
 
+
+{# Inside the ``content`` is where you should place most of your own stuff.
+   This will keep scripts at the page end and a navbar you add on later
+   intact. #}
 {% block content %}
-  <h1>Hello, Bootstrap</h1>
-{% endblock %}
+  <div class="container">
+  {%- with messages = get_flashed_messages(with_categories=True) %}
+  {%- if messages %}
+    <div class="row">
+      <div class="col-md-12">
+        {{utils.flashed_messages(messages)}}
+      </div>
+    </div>
+  {%- endif %}
+  {%- endwith %}
+    <div class="jumbotron">
+      <h1>Gluster Test Failure Tracker</h1>
+      <p>This tracks the failures from <a href="https://build.gluster.org">
+      build.gluster.org</a>.</p>
+    </div>
+    <table class="table table-bordered">
+      <tr>
+        <th>Signature</th>
+        <th>Job Name</th>
+        <th>Node</th>
+        <th>TimeStamp</th>
+      </tr>
+      {% for f in failures %}
+      <tr>
+        <td><code>{{ f.signature }}</code></td>
+        <td>{{ f.job_name }}</td>
+        <td>{{ f.node }}</td>
+        <td>{{ f.timestamp }}</td>
+      <tr>
+      {% endfor %}
+    </table>
+   </div>
+{%- endblock %}
