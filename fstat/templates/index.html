@@ -37,7 +37,7 @@
       {% for f in failures %}
       <tr>
         <td><code>{{ f.signature }}</code></td>
-        <td>{{ f.job_name }}</td>
+        <td><a href="{{ f.url }}">{{ f.job_name }}</a></td>
         <td>{{ f.node }}</td>
         <td>{{ f.timestamp }}</td>
       <tr>

@@ -5,7 +5,7 @@ from datetime import timedelta, datetime
 from fstat import app, db, Job
 
 
-def process_failure(url, build_info):
+def process_failure(url, job_name, build_info):
     text = requests.get(url, verify=False).text
     accum = []
     for t in text.split('\n'):
@@ -16,10 +16,9 @@ def process_failure(url, build_info):
                     if test_case:
                         failure = Job()
                         failure.url = url
-                        failure.state = build_info['result']
                         failure.signature = test_case.group()
-                        failure.node = build_info['builtOn']
-                        failure.timestamp = datetime.fromtimestamp(build_info['timestamp']/1000)
+                        failure.job_name = job_name
+                        failure.process_build_info(build_info)
                         db.session.add(failure)
                         db.session.commit()
             accum = []
@@ -34,15 +33,6 @@ def get_summary(job_name, num_days):
     requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
     cut_off_date = datetime.today() - timedelta(days=num_days)
     for page in xrange(0, app.config['JENKINS_MAX'], 100):
-        print ''.join([
-                app.config['JENKINS_URL'],
-                '/job/',
-                job_name,
-                '/'
-                'api/json?depth=1&tree=allBuilds'
-                '[url,result,timestamp,builtOn]',
-                '{{{0},{1}}}'.format(page, page+100)
-        ])
         build_info = requests.get(''.join([
                 app.config['JENKINS_URL'],
                 '/job/',
@@ -58,4 +48,4 @@ def get_summary(job_name, num_days):
                 return
             if build['result'] not in [None, 'SUCCESS']:
                 url = ''.join([build['url'], 'consoleText'])
-                process_failure(url, build)
+                process_failure(url, job_name, build)

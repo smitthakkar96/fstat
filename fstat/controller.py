@@ -5,5 +5,4 @@ from model import Job
 @app.route("/")
 def index():
     failures = Job.query.all()
-    print failures
     return render_template('index.html', failures=failures)
