@@ -27,19 +27,17 @@
       <p>This tracks the failures from <a href="https://build.gluster.org">
       build.gluster.org</a>.</p>
     </div>
+    <h2>Weekly Overall Summary</h2>
+    <h3>Duration: {{ num }} week{% if num > 1 %}s{% endif %}</h3>
     <table class="table table-bordered">
       <tr>
         <th>Signature</th>
-        <th>Job Name</th>
-        <th>Node</th>
-        <th>TimeStamp</th>
+        <th>Failure Count</th>
       </tr>
-      {% for f in failures %}
+      {% for f, count in failures.most_common(total) %}
       <tr>
         <td><code>{{ f.signature }}</code></td>
-        <td><a href="{{ f.url }}">{{ f.job_name }}</a></td>
-        <td>{{ f.node }}</td>
-        <td>{{ f.timestamp }}</td>
+        <td><a href="{{ url_for('weekly_instance_summary', num=num, fid=f.id) }}">{{ count }}</a></td>
       <tr>
       {% endfor %}
     </table>

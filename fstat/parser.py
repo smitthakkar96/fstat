@@ -2,7 +2,7 @@ import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 import re
 from datetime import timedelta, datetime
-from fstat import app, db, Job
+from fstat import app, db, Failure, FailureInstance
 
 
 def process_failure(url, job_name, build_info):
@@ -14,12 +14,16 @@ def process_failure(url, job_name, build_info):
                 if t2.find("Wstat") != -1:
                     test_case = re.search('\./tests/.*\.t', t2)
                     if test_case:
-                        failure = Job()
-                        failure.url = url
-                        failure.signature = test_case.group()
-                        failure.job_name = job_name
-                        failure.process_build_info(build_info)
+                        # Check if the Job exists
+                        failure = Failure.query.filter_by(signature=test_case.group()).first()
+                        # If it doesn't exist, create a job first
+                        if failure is None:
+                            failure = Failure(signature = test_case.group())
+                        failure_instance = FailureInstance(url=url, job_name=job_name)
+                        failure_instance.process_build_info(build_info)
+                        failure_instance.failure = failure
                         db.session.add(failure)
+                        db.session.add(failure_instance)
                         db.session.commit()
             accum = []
         else:

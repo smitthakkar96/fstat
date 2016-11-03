@@ -1,0 +1,35 @@
+{%- extends "base.html" %}
+{% import "bootstrap/utils.html" as utils %}
+{% block content %}
+  <div class="container">
+  {%- with messages = get_flashed_messages(with_categories=True) %}
+  {%- if messages %}
+    <div class="row">
+      <div class="col-md-12">
+        {{utils.flashed_messages(messages)}}
+      </div>
+    </div>
+  {%- endif %}
+  {%- endwith %}
+    <div class="jumbotron">
+      <h1>Weekly Failure Instance Summary</h1>
+    </div>
+      <h2>Failure Signature: <code>{{ failure.signature }}</code></h2>
+      <h3>Duration: {{ num }} week{% if num > 1 %}s{% endif %}</h3>
+    <table class="table table-bordered">
+      <tr>
+        <th>Job</th>
+        <th>node</th>
+        <th>timestamp</th>
+      </tr>
+      </tr>
+      {% for f in failure_instances %}
+      <tr>
+        <td>{{ f.job_name }}</td>
+        <td>{{ f.node }}</td>
+        <td><a href="{{ f.url }}">{{ f.timestamp }}</a></td>
+      <tr>
+      {% endfor %}
+    </table>
+   </div>
+{%- endblock %}
