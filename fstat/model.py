@@ -23,6 +23,7 @@ class FailureInstance(db.Model):
     node = db.Column(db.String(100), index=True)
     timestamp = db.Column(db.DateTime, index=True)
     failure_id = db.Column(db.Integer, db.ForeignKey('failure.id'))
+    __table__args = (db.UniqueConstraint(url, failure_id))
 
     def process_build_info(self, build):
         self.state = STATE.index(build['result'])
