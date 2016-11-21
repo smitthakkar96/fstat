@@ -56,4 +56,5 @@ def get_summary(job_name, num_days):
                 return
             if build['result'] not in [None, 'SUCCESS']:
                 url = ''.join([build['url'], 'consoleText'])
-                process_failure(url, job_name, build)
+                if not FailureInstance.query.filter_by(url=url).first():
+                    process_failure(url, job_name, build)
