@@ -1,5 +1,6 @@
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
+from sqlalchemy.exc import IntegrityError
 import re
 from datetime import timedelta, datetime
 from fstat import app, db, Failure, FailureInstance
@@ -22,9 +23,12 @@ def process_failure(url, job_name, build_info):
                         failure_instance = FailureInstance(url=url, job_name=job_name)
                         failure_instance.process_build_info(build_info)
                         failure_instance.failure = failure
-                        db.session.add(failure)
-                        db.session.add(failure_instance)
-                        db.session.commit()
+                        try:
+                            db.session.add(failure)
+                            db.session.add(failure_instance)
+                            db.session.commit()
+                        except IntegrityError:
+                            db.session.rollback()
             accum = []
         else:
             accum.append(t)
