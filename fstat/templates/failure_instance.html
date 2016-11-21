@@ -20,6 +20,7 @@
       <tr>
         <th>Job</th>
         <th>node</th>
+        <th>Review Information</th>
         <th>timestamp</th>
       </tr>
       </tr>
@@ -27,6 +28,7 @@
       <tr>
         <td>{{ f.job_name }}</td>
         <td>{{ f.node }}</td>
+        <td>{% if f.review %}<a href="https://review.gluster.org/{{ f.review }}">{{ f.review }}/{{ f.patchset }}</a>{% endif %}</td>
         <td><a href="{{ f.url }}">{{ f.timestamp }}</a></td>
       <tr>
       {% endfor %}
