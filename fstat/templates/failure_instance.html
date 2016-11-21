@@ -15,7 +15,7 @@
       <h1>Weekly Failure Instance Summary</h1>
     </div>
       <h2>Failure Signature: <code>{{ failure.signature }}</code></h2>
-      <h3>Duration: {{ num }} week{% if num > 1 %}s{% endif %}</h3>
+      <h3>Duration: {% include "snippets/date_range.html" %}</h3>
     <table class="table table-bordered">
       <tr>
         <th>Job</th>

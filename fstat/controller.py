@@ -3,6 +3,7 @@ from flask import render_template, redirect, url_for
 from fstat import app, db
 from fstat.lib import x_days_ago
 from model import Failure, FailureInstance
+from datetime import datetime
 
 
 @app.route("/")
@@ -19,7 +20,12 @@ def weekly_overall_summary(num=None):
             FailureInstance.timestamp > cut_off_date)
     failures = Counter([x.failure for x in failure_instances])
     return render_template('index.html',
-                           num=num, failures=failures, total=len(failures))
+                           num=num,
+                           failures=failures,
+                           total=len(failures),
+                           cut_off=cut_off_date.strftime('%Y-%m-%d'),
+                           today=datetime.today().strftime('%Y-%m-%d'),
+                           )
 
 
 @app.route("/weeks/<int:num>/failure/<int:fid>")
@@ -37,4 +43,7 @@ def weekly_instance_summary(num=None, fid=None):
     return render_template('failure_instance.html',
                            num=num,
                            failure=failure,
-                           failure_instances=failure_instances)
+                           failure_instances=failure_instances,
+                           cut_off=cut_off_date.strftime('%Y-%m-%d'),
+                           today=datetime.today().strftime('%Y-%m-%d'),
+                           )

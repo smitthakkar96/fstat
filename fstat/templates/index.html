@@ -28,7 +28,7 @@
       build.gluster.org</a>.</p>
     </div>
     <h2>Weekly Overall Summary</h2>
-    <h3>Duration: {{ num }} week{% if num > 1 %}s{% endif %}</h3>
+    <h3>Duration: {% include "snippets/date_range.html" %}</h3>
     <table class="table table-bordered">
       <tr>
         <th>Signature</th>
