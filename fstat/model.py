@@ -13,13 +13,16 @@ STATE = (
 class Failure(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     signature = db.Column(db.String(1000), index=True)
-    failures = db.relationship('FailureInstance', backref='failure', lazy='dynamic')
+    failures = db.relationship('FailureInstance',
+                               backref='failure',
+                               lazy='dynamic')
+
 
 class FailureInstance(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     url = db.Column(db.String(100))
     state = db.Column(db.Integer)
-    job_name  = db.Column(db.String(100), index=True)
+    job_name = db.Column(db.String(100), index=True)
     node = db.Column(db.String(100), index=True)
     timestamp = db.Column(db.DateTime, index=True)
     review = db.Column(db.Integer)

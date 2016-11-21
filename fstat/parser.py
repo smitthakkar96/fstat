@@ -16,11 +16,13 @@ def process_failure(url, job_name, build_info):
                     test_case = re.search('\./tests/.*\.t', t2)
                     if test_case:
                         # Check if the Job exists
-                        failure = Failure.query.filter_by(signature=test_case.group()).first()
+                        failure = Failure.query.filter_by(
+                                signature=test_case.group()).first()
                         # If it doesn't exist, create a job first
                         if failure is None:
-                            failure = Failure(signature = test_case.group())
-                        failure_instance = FailureInstance(url=url, job_name=job_name)
+                            failure = Failure(signature=test_case.group())
+                        failure_instance = FailureInstance(url=url,
+                                                           job_name=job_name)
                         failure_instance.process_build_info(build_info)
                         failure_instance.failure = failure
                         try:
