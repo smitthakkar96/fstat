@@ -2,4 +2,5 @@ Flask
 Flask-SQLAlchemy
 Flask-Script
 Flask-Bootstrap
+Flask-Migrate
 requests
