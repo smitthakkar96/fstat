@@ -46,4 +46,5 @@ def weekly_instance_summary(num=None, fid=None):
                            failure_instances=failure_instances,
                            cut_off=cut_off_date.strftime('%Y-%m-%d'),
                            today=datetime.today().strftime('%Y-%m-%d'),
+                           title="Summary for " + failure.signature,
                            )
