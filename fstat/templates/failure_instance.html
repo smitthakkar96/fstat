@@ -19,9 +19,10 @@
     <table class="table table-bordered">
       <tr>
         <th>Job</th>
-        <th>node</th>
+        <th>Node</th>
         <th>Review Information</th>
-        <th>timestamp</th>
+        <th>Branch</th>
+        <th>Timestamp</th>
       </tr>
       </tr>
       {% for f in failure_instances %}
@@ -29,6 +30,7 @@
         <td>{{ f.job_name }}</td>
         <td>{{ f.node }}</td>
         <td>{% if f.review %}<a href="https://review.gluster.org/{{ f.review }}">{{ f.review }}/{{ f.patchset }}</a>{% endif %}</td>
+        <td>{% if f.branch %}{{ f.branch }}{% endif %}</td>
         <td><a href="{{ f.url }}">{{ f.timestamp }}</a></td>
       <tr>
       {% endfor %}
