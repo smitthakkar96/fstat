@@ -1,4 +1,4 @@
-from fabric.api import task, run, env, sudo, cd
+from fabric.api import task, run, env, sudo, cd, prefix
 
 
 env.sudo_user = 'fstat'
