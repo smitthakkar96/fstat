@@ -14,7 +14,7 @@
     <div class="jumbotron">
       <h1>Weekly Failure Instance Summary</h1>
     </div>
-      <h2>Failure Signature: <code>{{ failure.signature }}</code></h2>
+    <h2>Failure Signature: <a href="http://git.gluster.org/cgit/glusterfs.git/tree/{{ failure.signature }}" target="_blank"><code>{{ failure.signature }}</code></a></h2>
       <h3>Duration: {% include "snippets/date_range.html" %}</h3>
     <table class="table table-bordered">
       <tr>
