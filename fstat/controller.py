@@ -13,8 +13,8 @@ def index():
 
 @app.route("/weeks/<int:num>")
 def weekly_overall_summary(num=None):
-    if num > 4:
-        num = 4
+    if num > 12:
+        num = 12
     cut_off_date = (x_days_ago(num*7))
     failure_instances = FailureInstance.query.filter(
             FailureInstance.timestamp > cut_off_date)
