@@ -49,7 +49,7 @@ def get_summary(job_name, num_days):
                 job_name,
                 '/'
                 'api/json?depth=1&tree=allBuilds'
-                '[url,result,timestamp,builtOn,actions[value]]',
+                '[url,result,timestamp,builtOn,actions[parameters[value]]]',
                 '{{{0},{1}}}'.format(page, page+100)
         ]), verify=False).json()
         for build in build_info.get('allBuilds'):
