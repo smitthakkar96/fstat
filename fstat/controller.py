@@ -1,7 +1,6 @@
 from collections import Counter
 from flask import render_template, redirect, url_for, request
 from fstat import app, db
-from fstat.lib import x_weeks_ago
 from model import Failure, FailureInstance
 from datetime import datetime, timedelta
 
