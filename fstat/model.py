@@ -37,7 +37,13 @@ class FailureInstance(db.Model):
         self.timestamp = datetime.fromtimestamp(build['timestamp']/1000)
         try:
             self.review = build['actions'][5]['parameters'][4]['value']
+        except KeyError:
+            pass
+        try:
             self.patchset = build['actions'][5]['parameters'][6]['value']
+        except:
+            pass
+        try:
             self.branch = build['actions'][5]['parameters'][2]['value']
         except KeyError:
             self.branch = 'master'
