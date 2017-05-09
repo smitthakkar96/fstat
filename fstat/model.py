@@ -41,7 +41,7 @@ class FailureInstance(db.Model):
             pass
         try:
             self.patchset = build['actions'][5]['parameters'][6]['value']
-        except:
+        except KeyError:
             pass
         try:
             self.branch = build['actions'][5]['parameters'][2]['value']
