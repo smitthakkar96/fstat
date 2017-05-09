@@ -35,6 +35,9 @@ class FailureInstance(db.Model):
         self.state = STATE.index(build['result'])
         self.node = build['builtOn']
         self.timestamp = datetime.fromtimestamp(build['timestamp']/1000)
-        self.review = build['actions'][5]['parameters'][4]['value']
-        self.patchset = build['actions'][5]['parameters'][6]['value']
-        self.branch = build['actions'][5]['parameters'][2]['value']
+        try:
+            self.review = build['actions'][5]['parameters'][4]['value']
+            self.patchset = build['actions'][5]['parameters'][6]['value']
+            self.branch = build['actions'][5]['parameters'][2]['value']
+        except KeyError:
+            self.branch = 'master'
