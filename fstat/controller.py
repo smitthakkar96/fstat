@@ -2,7 +2,7 @@ from collections import Counter
 from flask import render_template, redirect, url_for
 from fstat import app, db
 from fstat.lib import x_days_ago
-from model import Failure, FailureInstance
+from fstat.model import Failure, FailureInstance
 from datetime import datetime
 
 
@@ -34,7 +34,7 @@ def weekly_instance_summary(num=None, fid=None):
         num = 4
     fid = int(fid)
     cut_off_date = (x_days_ago(num*7))
-    print cut_off_date
+    print(cut_off_date)
     failure = Failure.query.filter_by(id=fid).first_or_404()
     failure_instances = FailureInstance.query.filter(
             db.and_(
