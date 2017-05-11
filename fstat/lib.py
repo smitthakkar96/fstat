@@ -1,5 +1,7 @@
 from datetime import datetime, timedelta
 
+from fstat import db
+from model import FailureInstance
 
 def x_days_ago(x=1):
     '''
@@ -26,3 +28,7 @@ def parse_end_date(end_date):
     else:
         end_date = datetime.strptime(end_date, '%Y-%m-%d')
     return end_date    
+
+
+def get_branch_list(fid):
+    return db.session.query(FailureInstance.branch).filter(FailureInstance.failure_id == fid).distinct()
