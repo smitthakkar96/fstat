@@ -15,10 +15,10 @@ def index():
 @app.route('/summary')
 def overall_summary():
     '''
-        Shows overall summary
-        Params
-        - start_day: date with format yyyy-mm-dd, if start date is none it is defaulted to the last monday
-        - end_day: date with format yyyy-mmd-dd, if end date is none it is defaulted to today
+    Shows overall summary
+    Params
+    start_day: date with format yyyy-mm-dd, if start date is none it is defaulted to the last monday
+    end_day: date with format yyyy-mmd-dd, if end date is none it is defaulted to today
     '''
     start_date = parse_start_date(request.args.get('start_date'))
     end_date = parse_end_date(request.args.get('end_date'))
@@ -38,11 +38,10 @@ def overall_summary():
 @app.route('/failure/<int:fid>')
 def instance_summary(fid=None):
     '''
-        Shows instance summary for particular failure
-        Params        today = datetime.today().replace(hour=0, minute=0, second=0,
-
-            - start_day: date with format yyyy-mm-dd, if start date is none it is defaulted to the last monday
-            - end_day: date with format yyyy-mm-dd, if end date is none it is defaulted to today
+    Shows instance summary for particular failure
+    Params
+    start_day: date with format yyyy-mm-dd, if start date is none it is defaulted to the last monday
+    end_day: date with format yyyy-mm-dd, if end date is none it is defaulted to today
     '''
     fid = int(fid)
     start_date = parse_start_date(request.args.get('start_date'))
