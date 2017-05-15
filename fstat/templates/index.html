@@ -27,8 +27,10 @@
       <p>This tracks the failures from <a href="https://build.gluster.org">
       build.gluster.org</a>.</p>
     </div>
-    <h2>Weekly Overall Summary</h2>
-    <h3>Duration: {% include "snippets/date_range.html" %}</h3>
+    <!--<h2>Weekly Overall Summary</h2>-->
+    <h2>Overall Summary</h2>
+    {% set range = [start_date, '-', end_date] %}
+    {% include "snippets/date_range.html" %}
     <table class="table table-bordered">
       <tr>
         <th>Signature</th>
@@ -37,7 +39,7 @@
       {% for f, count in failures.most_common(total) %}
       <tr>
         <td><a href="http://git.gluster.org/cgit/glusterfs.git/tree/{{ f.signature }}" target="_blank"><code>{{ f.signature }}</code></a></td>
-        <td><a href="{{ url_for('weekly_instance_summary', num=num, fid=f.id) }}">{{ count }}</a></td>
+        <td><a href="{{ url_for('instance_summary', start_date=start_date, end_date=end_date, fid=f.id) }}">{{ count }}</a></td>
       <tr>
       {% endfor %}
     </table>
