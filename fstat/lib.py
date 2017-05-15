@@ -14,6 +14,9 @@ def parse_start_date(start_date):
         today = datetime.today().replace(hour=0, minute=0, second=0,
                                          microsecond=0)
         start_date = today - timedelta(days=today.weekday())
+
+        if (datetime.today() - start_date).days == 0:
+            start_date = start_date - timedelta(days=7)
     else:
         start_date = datetime.strptime(start_date, '%Y-%m-%d')
 
