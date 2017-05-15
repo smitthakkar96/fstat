@@ -30,7 +30,9 @@ def parse_end_date(end_date):
     return end_date
 
 
-def get_branch_list(fid):
+def get_branch_list(fid=None):
+    if not fid:
+        return db.session.query(FailureInstance.branch).distinct()
     return db.session.query(FailureInstance.branch) \
                      .filter(FailureInstance.failure_id == fid) \
                      .distinct()

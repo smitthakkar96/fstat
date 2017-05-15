@@ -1,0 +1,19 @@
+<h3 style="padding:0;margin-bottom:0;">Branch</h3>
+<select class="form-control" id="branch_dropdown" onchange="switchBranch()">
+  <option value="all">All</option>
+  {% for b in branches %}
+  <option value="{{b[0]}}">{{b[0]}}</option>
+  {% endfor %}
+</select>
+
+<script type="text/javascript">
+  var params = new URLSearchParams(window.location.search);
+  function switchBranch() {
+    var branch = document.getElementById("branch_dropdown").value
+    params.set("branch", branch);
+    window.location.search = params.toString();
+  }
+  if(params.get('branch')) {
+    document.getElementById("branch_dropdown").value = params.get('branch');
+  }
+</script>

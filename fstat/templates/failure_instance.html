@@ -20,12 +20,7 @@
       {% include "snippets/date_range.html" %}
     </div>
     <div class="col-xs-6">
-      <h3 style="padding:0;margin-bottom:0;">Branch</h3>
-      <select class="form-control" id="branch_dropdown" onchange="switchBranch()">
-        {% for b in branches %}
-        <option value="{{b[0]}}">{{b[0]}}</option>
-        {% endfor %}
-      </select>
+      {% include "snippets/branch_filter.html" %}
     </div>
     </div>
     <table class="table table-bordered">
@@ -47,15 +42,4 @@
       {% endfor %}
     </table>
    </div>
-<script type="text/javascript">
-  var params = new URLSearchParams(window.location.search);
-  function switchBranch() {
-    var branch = document.getElementById("branch_dropdown").value
-    params.set("branch", branch);
-    window.location.search = params.toString();
-  }
-  if(params.get('branch')) {
-    document.getElementById("branch_dropdown").value = params.get('branch');
-  }
-</script>
-{%- endblock %}
+{% endblock %}
