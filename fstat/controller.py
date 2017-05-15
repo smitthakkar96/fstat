@@ -1,4 +1,3 @@
-from datetime import datetime, timedelta
 from collections import Counter
 
 from flask import render_template, redirect, url_for, request
@@ -6,6 +5,7 @@ from flask import render_template, redirect, url_for, request
 from fstat import app, db
 from model import Failure, FailureInstance
 from lib import parse_end_date, parse_start_date, get_branch_list
+
 
 @app.route("/")
 def index():
@@ -23,7 +23,6 @@ def overall_summary():
     start_date = parse_start_date(request.args.get('start_date'))
     end_date = parse_end_date(request.args.get('end_date'))
 
-
     failure_instances = FailureInstance.query.filter(FailureInstance.timestamp > start_date,
                                                      FailureInstance.timestamp < end_date)
     failures = Counter([x.failure for x in failure_instances])
@@ -35,7 +34,7 @@ def overall_summary():
                            start_date=str(start_date.date()),
                            )
 
- 
+
 @app.route('/failure/<int:fid>')
 def instance_summary(fid=None):
     '''
@@ -56,9 +55,9 @@ def instance_summary(fid=None):
                                                              FailureInstance.failure == failure,
                                                              FailureInstance.branch == branch))
     return render_template('failure_instance.html',
-                            failure=failure,
-                            branches=get_branch_list(fid),
-                            failure_instances=failure_instances,
-                            end_date=str(end_date.date()),
-                            start_date=str(start_date.date()),
-                            title="Summary for " + failure.signature)
+                           failure=failure,
+                           branches=get_branch_list(fid),
+                           failure_instances=failure_instances,
+                           end_date=str(end_date.date()),
+                           start_date=str(start_date.date()),
+                           title="Summary for " + failure.signature)
