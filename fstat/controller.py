@@ -6,6 +6,7 @@ from fstat import app, db, github
 from model import Failure, FailureInstance, User
 from lib import parse_end_date, parse_start_date
 
+
 @github.access_token_getter
 def token_getter():
     # user = g.user
