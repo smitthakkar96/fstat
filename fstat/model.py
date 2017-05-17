@@ -20,7 +20,7 @@ class Failure(db.Model):
 
 class FailureInstance(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    url = db.Column(db.String(100))
+    url = db.Column(db.String(100), index=True)
     state = db.Column(db.Integer)
     job_name = db.Column(db.String(100), index=True)
     node = db.Column(db.String(100), index=True)
