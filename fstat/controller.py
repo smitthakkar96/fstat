@@ -1,15 +1,67 @@
 from collections import Counter
 
-from flask import render_template, redirect, url_for, request
+from flask import render_template, redirect, url_for, request, jsonify, session, g
 
-from fstat import app, db
-from model import Failure, FailureInstance
+from fstat import app, db, github
+from model import Failure, FailureInstance, User
 from lib import parse_end_date, parse_start_date
+
+
+@github.access_token_getter
+def token_getter():
+    # user = g.user
+    # if user is not None:
+    #     return user.github_access_token
+    return session['token']
+
+
+@app.before_request
+def before_request():
+    if 'token' in session:
+        user = User.query.filter_by(token=session['token']).first()
+        g.user = user
 
 
 @app.route("/")
 def index():
     return redirect(url_for('overall_summary'))
+
+
+@app.route('/login', methods=['POST'])
+def login():
+    return github.authorize(scope="user,user:email,read:org")
+
+
+@app.route('/demo/teams')
+def get_user_teams():
+    teams = github.get('user/orgs')
+    return jsonify(teams)
+
+
+@app.route('/github-callback')
+@github.authorized_handler
+def authorized(oauth_token):
+    session['token'] = oauth_token
+    if oauth_token:
+        response_user_data = github.get('user')
+        user = User.query.filter_by(email=response_user_data['email']).first()
+        if not user:
+            user = User()
+            user.email = response_user_data['email']
+            user.github_username = response_user_data['login']
+            user.name = response_user_data['name']
+            user.profile_picture = response_user_data['avatar_url']
+            user.token = oauth_token
+            db.session.add(user)
+        user.token = oauth_token
+        db.session.commit()
+    return redirect('/')
+
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect('/')
 
 
 @app.route('/summary')
