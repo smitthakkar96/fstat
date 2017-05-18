@@ -16,24 +16,36 @@
     </div>
     <h2>Failure Signature: <a href="http://git.gluster.org/cgit/glusterfs.git/tree/{{ failure.signature }}" target="_blank"><code>{{ failure.signature }}</code></a></h2>
       <h3>{% include "snippets/date_range.html" %}</h3>
-    <table class="table table-bordered">
-      <tr>
-        <th>Job</th>
-        <th>Node</th>
-        <th>Review Information</th>
-        <th>Branch</th>
-        <th>Timestamp</th>
-      </tr>
-      </tr>
-      {% for f in failure_instances %}
-      <tr>
-        <td>{{ f.job_name }}</td>
-        <td>{{ f.node }}</td>
-        <td>{% if f.review %}<a href="https://review.gluster.org/{{ f.review }}">{{ f.review }}/{{ f.patchset }}</a>{% endif %}</td>
-        <td>{% if f.branch %}{{ f.branch }}{% endif %}</td>
-        <td><a href="{{ f.url }}">{{ f.timestamp }}</a></td>
-      <tr>
-      {% endfor %}
-    </table>
+      <div class="table-responsive">
+        <table class="table table-bordered">
+          <tr>
+            <th>Job</th>
+            <th>Node</th>
+            <th>Review Information</th>
+            <th>Branch</th>
+            <th>Timestamp</th>
+          </tr>
+          </tr>
+          {% for f in failure_instances %}
+          <tr>
+            <td>{{ f.job_name }}</td>
+            <td>{{ f.node }}</td>
+            <td>{% if f.review %}<a href="https://review.gluster.org/{{ f.review }}">{{ f.review }}/{{ f.patchset }}</a>{% endif %}</td>
+            <td>{% if f.branch %}{{ f.branch }}{% endif %}</td>
+            <td><a href="{{ f.url }}">{{ f.timestamp }}</a></td>
+          <tr>
+          {% endfor %}
+        </table>
+      </div>
    </div>
+   <style>
+     @media only screen {
+        code {
+          font-size: 0.7em;
+          white-space: pre-line;
+          word-break: break-word;
+          word-wrap: break-word;
+        }
+     }
+   </style>
 {%- endblock %}
