@@ -16,6 +16,7 @@ class Failure(db.Model):
     failures = db.relationship('FailureInstance',
                                backref='failure',
                                lazy='dynamic')
+    bugs = db.relationship('BugFailure', backref="failure")
 
 
 class FailureInstance(db.Model):
@@ -47,3 +48,10 @@ class FailureInstance(db.Model):
             self.branch = build['actions'][5]['parameters'][2]['value']
         except KeyError:
             self.branch = 'master'
+
+
+class BugFailure(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    failure_id = db.Column(db.Integer, db.ForeignKey('failure.id'))
+    bug_id = db.Column(db.Integer) #refers to the bug on bugzilla
+    user_id = db.Column(db.Integer) #refers to the use who associate the bug
