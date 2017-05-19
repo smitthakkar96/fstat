@@ -3,7 +3,7 @@ from collections import Counter
 from flask import render_template, redirect, url_for, request, jsonify, session, g
 
 from fstat import app, db, github
-from model import Failure, FailureInstance, User
+from model import Failure, FailureInstance, User, BugFailure
 from lib import parse_end_date, parse_start_date
 
 
@@ -62,6 +62,23 @@ def authorized(oauth_token):
 def logout():
     session.clear()
     return redirect('/')
+
+
+@app.route('/associate-bugs/<int:fid>', methods=['POST'])
+def associate_bug(fid):
+    bug_ids = request.json.get('bugIds')
+    failure = Failure.query.filter_by(id=fid)
+    # remove all associated bugs
+    BugFailure.query.filter_by(failure_id=fid).delete(synchronize_session='fetch')
+    db.session.commit()
+    # associate recieved bugIds
+    for bug_id in bug_ids:
+        bug_failure = BugFailure()
+        bug_failure.bug_id = bug_id
+        bug_failure.failure_id = fid
+        db.session.add(bug_failure)
+    db.session.commit()
+    return jsonify({"response": "success"})
 
 
 @app.route('/summary')
