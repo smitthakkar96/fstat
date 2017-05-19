@@ -4,7 +4,7 @@ from flask import render_template, redirect, url_for, request, jsonify, session,
 
 from fstat import app, db, github
 from model import Failure, FailureInstance, User, BugFailure
-from lib import parse_end_date, parse_start_date
+from lib import parse_end_date, parse_start_date, organization_access_required
 
 
 @github.access_token_getter
@@ -30,12 +30,6 @@ def index():
 @app.route('/login', methods=['POST'])
 def login():
     return github.authorize(scope="user,user:email,read:org")
-
-
-@app.route('/demo/teams')
-def get_user_teams():
-    teams = github.get('user/orgs')
-    return jsonify(teams)
 
 
 @app.route('/github-callback')
@@ -65,6 +59,7 @@ def logout():
 
 
 @app.route('/associate-bugs/<int:fid>', methods=['POST'])
+@organization_access_required('gluster')
 def associate_bug(fid):
     bug_ids = request.json.get('bugIds')
     # remove all associated bugs

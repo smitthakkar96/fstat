@@ -29,6 +29,7 @@ function submit() {
                 location.reload();
             },
             error: function(err, status, xhr){
+                alert("You must be associated with gluster in order to assocaite a bug.")
             }
         });
 
