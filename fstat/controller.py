@@ -3,8 +3,13 @@ from collections import Counter
 from flask import render_template, redirect, url_for, request, session, g
 
 from fstat import app, db, github
+<<<<<<< HEAD
 from model import Failure, FailureInstance, User
 from lib import parse_end_date, parse_start_date, get_branch_list
+=======
+from model import Failure, FailureInstance, User, BugFailure
+from lib import parse_end_date, parse_start_date, organization_access_required
+>>>>>>> added check to only allow people to associate the bugs who are in gluster org
 
 
 @github.access_token_getter

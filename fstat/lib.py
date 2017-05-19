@@ -34,9 +34,7 @@ def get_teams():
 
 
 def organization_access_required(org):
-    """
-    Decorator that can be used to validate the presence of user in a particular organization.
-    """
+    """ Decorator that can be used to validate the presence of user in a particular organization. """
     def decorator(func):
         @wraps(func)
         def wrap(*args, **kwargs):
