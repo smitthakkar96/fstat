@@ -67,7 +67,6 @@ def logout():
 @app.route('/associate-bugs/<int:fid>', methods=['POST'])
 def associate_bug(fid):
     bug_ids = request.json.get('bugIds')
-    failure = Failure.query.filter_by(id=fid)
     # remove all associated bugs
     BugFailure.query.filter_by(failure_id=fid).delete(synchronize_session='fetch')
     db.session.commit()
