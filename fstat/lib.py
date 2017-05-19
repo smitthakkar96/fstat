@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from flask import jsonify
 from fstat import github
 
+
 def x_days_ago(x=1):
     '''
     Return timestamp for X days ago
@@ -40,7 +41,7 @@ def get_teams():
 
 
 def organization_access_required(org):
-    """ Decorator that can be used to validate the presence of user in a particular organization. """
+    """ Decorator that can be used to validate the presence of user in a particular organization. """  # noqa: E501
     def decorator(func):
         @wraps(func)
         def wrap(*args, **kwargs):
@@ -48,6 +49,6 @@ def organization_access_required(org):
             for team in teams:
                 if team['login'] == org:
                     return None
-            return jsonify({"response": "You must be the memeber of gluster to associate the bug."}), 401
+            return jsonify({"response": "You must be the memeber of gluster to associate the bug."}), 401  # noqa: E501
         return wrap
     return decorator
