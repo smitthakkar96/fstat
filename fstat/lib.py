@@ -3,8 +3,18 @@ from datetime import datetime, timedelta
 
 from flask import jsonify
 
+<<<<<<< HEAD
 from fstat import db, github
 from model import FailureInstance
+=======
+
+def x_days_ago(x=1):
+    '''
+    Return timestamp for X days ago
+    '''
+    return (datetime.today().replace(hour=0, minute=0, second=0,
+            microsecond=0) - timedelta(days=x))
+>>>>>>> fixed flake8 errors
 
 
 def parse_start_date(start_date=None):
@@ -34,7 +44,7 @@ def get_teams():
 
 
 def organization_access_required(org):
-    """ Decorator that can be used to validate the presence of user in a particular organization. """
+    """ Decorator that can be used to validate the presence of user in a particular organization. """  # noqa: E501
     def decorator(func):
         @wraps(func)
         def wrap(*args, **kwargs):
