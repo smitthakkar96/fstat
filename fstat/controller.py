@@ -9,9 +9,6 @@ from lib import parse_end_date, parse_start_date
 
 @github.access_token_getter
 def token_getter():
-    # user = g.user
-    # if user is not None:
-    #     return user.github_access_token
     return session['token']
 
 
@@ -48,7 +45,7 @@ def authorized(oauth_token):
         if not user:
             user = User()
             user.email = response_user_data['email']
-            user.github_username = response_user_data['login']
+            user.username = response_user_data['login']
             user.name = response_user_data['name']
             user.profile_picture = response_user_data['avatar_url']
             user.token = oauth_token
