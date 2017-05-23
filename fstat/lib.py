@@ -34,5 +34,5 @@ def get_branch_list(fid=None):
     if not fid:
         return db.session.query(FailureInstance.branch).distinct()
     return db.session.query(FailureInstance.branch) \
-                     .filter(FailureInstance.failure_id == fid) \
+                     .filter(FailureInstance.failure_id == fid, FailureInstance.branch != None) \
                      .distinct()

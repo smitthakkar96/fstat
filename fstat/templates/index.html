@@ -46,7 +46,7 @@
       {% for f, count in failures.most_common(total) %}
       <tr>
         <td><a href="http://git.gluster.org/cgit/glusterfs.git/tree/{{ f.signature }}" target="_blank"><code>{{ f.signature }}</code></a></td>
-        <td><a href="{{ url_for('instance_summary', start_date=start_date, end_date=end_date, fid=f.id, branch=request.args.get('branch', all)) }}">{{ count }}</a></td>
+        <td><a href="{{ url_for('instance_summary', start_date=start_date, end_date=end_date, fid=f.id, branch=request.args.get('branch', 'all')) }}">{{ count }}</a></td>
       <tr>
       {% endfor %}
     </table>
