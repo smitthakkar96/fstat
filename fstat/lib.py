@@ -41,7 +41,9 @@ def get_teams():
 
 
 def organization_access_required(org):
-    """ Decorator that can be used to validate the presence of user in a particular organization. """  # noqa: E501
+    """
+    Decorator that can be used to validate the presence of user in a particular organization.
+    """
     def decorator(func):
         @wraps(func)
         def wrap(*args, **kwargs):
@@ -49,6 +51,7 @@ def organization_access_required(org):
             for team in teams:
                 if team['login'] == org:
                     return None
-            return jsonify({"response": "You must be the memeber of gluster to associate the bug."}), 401  # noqa: E501
+            return jsonify({"response": "You must be the memeber of \
+                                        gluster to associate the bug."}), 401
         return wrap
     return decorator

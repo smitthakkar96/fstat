@@ -9,9 +9,6 @@ from lib import parse_end_date, parse_start_date, organization_access_required
 
 @github.access_token_getter
 def token_getter():
-    # user = g.user
-    # if user is not None:
-    #     return user.github_access_token
     return session['token']
 
 
