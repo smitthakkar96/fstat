@@ -12,7 +12,7 @@ STATE = (
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    github_username = db.Column(db.Integer, unique=True)
+    username = db.Column(db.Integer, unique=True)
     email = db.Column(db.String, unique=True)
     profile_picture = db.Column(db.String)
     token = db.Column(db.String)
