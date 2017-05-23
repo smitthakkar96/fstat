@@ -3,10 +3,9 @@ from datetime import datetime, timedelta
 
 from flask import jsonify
 
-<<<<<<< HEAD
 from fstat import db, github
 from model import FailureInstance
-=======
+
 
 def x_days_ago(x=1):
     '''
@@ -14,8 +13,6 @@ def x_days_ago(x=1):
     '''
     return (datetime.today().replace(hour=0, minute=0, second=0,
             microsecond=0) - timedelta(days=x))
->>>>>>> fixed flake8 errors
-
 
 def parse_start_date(start_date=None):
     if not start_date:
