@@ -1,5 +1,8 @@
 from datetime import datetime, timedelta
 
+from fstat import db
+from model import FailureInstance
+
 
 def parse_start_date(start_date=None):
     if not start_date:
@@ -11,7 +14,6 @@ def parse_start_date(start_date=None):
             start_date = start_date - timedelta(days=7)
     else:
         start_date = datetime.strptime(start_date, '%Y-%m-%d')
-
     return start_date
 
 
@@ -21,3 +23,12 @@ def parse_end_date(end_date=None):
     else:
         end_date = datetime.strptime(end_date, '%Y-%m-%d')
     return end_date
+
+
+def get_branch_list(fid=None):
+    if not fid:
+        return db.session.query(FailureInstance.branch).distinct()
+    return db.session.query(FailureInstance.branch) \
+                     .filter(FailureInstance.failure_id == fid,
+                             FailureInstance.branch is not None) \
+                     .distinct()
