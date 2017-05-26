@@ -2,3 +2,4 @@
 *.db
 instance/application.cfg
 .vscode
+.DS_Store
