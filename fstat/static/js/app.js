@@ -32,9 +32,4 @@ function submit() {
                 alert("You must be associated with gluster in order to assocaite a bug.")
             }
         });
-
-    // $.post(URL, JSON.stringify({bugIds: bugIds}), function(data) {
-    //     $('#associate-bug-modal').modal('show');
-    //     location.reload();
-    // }, 'json');
 }
