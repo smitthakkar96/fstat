@@ -4,7 +4,6 @@ from flask import render_template, redirect, url_for, request, jsonify, session,
 
 from fstat import app, db, github
 from model import Failure, FailureInstance, User
-from lib import parse_end_date, parse_start_date
 from lib import parse_end_date, parse_start_date, get_branch_list
 
 
