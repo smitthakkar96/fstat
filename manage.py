@@ -1,13 +1,15 @@
 #!/usr/bin/env python
 
 from flask_script import Server, Manager
+from flask_migrate import MigrateCommand
+
 from fstat import app, db
 from fstat.parser import get_summary
 
 
 manager = Manager(app)
 manager.add_command('runserver', Server())
-
+manager.add_command('db', MigrateCommand)
 
 @manager.command
 def db_init():
