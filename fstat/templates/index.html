@@ -30,7 +30,14 @@
     <!--<h2>Weekly Overall Summary</h2>-->
     <h2>Overall Summary</h2>
     {% set range = [start_date, '-', end_date] %}
-    {% include "snippets/date_range.html" %}
+    <div class="row">
+      <div class="col-xs-6">
+        {% include "snippets/date_range.html" %}
+      </div>
+      <div class="col-xs-6">
+        {% include "snippets/branch_filter.html" %}
+      </div>
+    </div>
     <table class="table table-bordered">
       <tr>
         <th>Signature</th>
@@ -53,7 +60,9 @@
         {% if g.user %}
           <td><button type="submit" class="btn btn-info" id="associate_bug" data-failure="{{ f.id }}" onclick="showModal({{f.id}}, {{f.get_bug_ids()|safe}})">Manage Assoicated Bugs</button></td>
         {% endif %}
+        <td><a href="{{ url_for('instance_summary', start_date=start_date, end_date=end_date, fid=f.id, branch=request.args.get('branch', 'all')) }}">{{ count }}</a></td>
       </tr>
+
       {% endfor %}
     </table>
    </div>

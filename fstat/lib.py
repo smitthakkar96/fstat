@@ -2,7 +2,9 @@ from functools import wraps
 from datetime import datetime, timedelta
 
 from flask import jsonify
-from fstat import github
+
+from fstat import db, github
+from model import FailureInstance
 
 
 def parse_start_date(start_date=None):
@@ -15,7 +17,6 @@ def parse_start_date(start_date=None):
             start_date = start_date - timedelta(days=7)
     else:
         start_date = datetime.strptime(start_date, '%Y-%m-%d')
-
     return start_date
 
 
@@ -47,3 +48,17 @@ def organization_access_required(org):
                                         gluster to associate the bug."}), 401
         return wrap
     return decorator
+
+
+def get_branch_list(fid=None):
+    if not fid:
+        return db.session.query(FailureInstance.branch) \
+                .filter(FailureInstance.branch.isnot(None)) \
+                .order_by(FailureInstance.branch) \
+                .distinct()
+    else:
+        return db.session.query(FailureInstance.branch) \
+                .filter(FailureInstance.failure_id == fid,
+                        FailureInstance.branch.isnot(None)) \
+                .order_by(FailureInstance.branch) \
+                .distinct()
