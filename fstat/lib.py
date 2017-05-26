@@ -50,7 +50,7 @@ def organization_access_required(org):
             teams = get_teams()
             for team in teams:
                 if team['login'] == org:
-                    return None
+                    return func(*args, **kwargs)
             return jsonify({"response": "You must be the memeber of \
                                         gluster to associate the bug."}), 401
         return wrap
