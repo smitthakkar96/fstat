@@ -26,7 +26,7 @@ def index():
 
 @app.route('/login', methods=['POST'])
 def login():
-    return github.authorize(scope="user,user:email,read:org")
+    return github.authorize(scope="user:email,read:org")
 
 
 @app.route('/github-callback')
