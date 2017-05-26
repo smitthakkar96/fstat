@@ -29,12 +29,6 @@ def login():
     return github.authorize(scope="user,user:email,read:org")
 
 
-@app.route('/demo/teams')
-def get_user_teams():
-    teams = github.get('user/orgs')
-    return jsonify(teams)
-
-
 @app.route('/github-callback')
 @github.authorized_handler
 def authorized(oauth_token):
