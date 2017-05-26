@@ -1,6 +1,6 @@
 from collections import Counter
 
-from flask import render_template, redirect, url_for, request, jsonify, session, g
+from flask import render_template, redirect, url_for, request, session, g
 
 from fstat import app, db, github
 from model import Failure, FailureInstance, User
