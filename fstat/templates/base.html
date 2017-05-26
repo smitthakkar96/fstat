@@ -41,10 +41,44 @@
  
 <!-- Include Date Range Picker -->
 <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
-<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />  
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+<script src="https://use.fontawesome.com/acfd66e721.js"></script>
 {% endblock %}
 
 {# Finally, round things out with navigation #}
 {% block navbar %}
 {#nav.frontend_top.render()#}
+<div class="container">
+<div class="login col-sm-2 col-sm-offset-10">
+  {% if 'token' not in session %}
+  <form action='/login' method='POST'>
+    <button type="submit" class="btn btn-info btn-login btn-md" style="position:absolute; right:0">
+      <i class="fa fa-github" aria-hidden="true"></i>
+  Login with Github
+    </button>
+  </form>
+
+  {% endif %}
+
+  {% if 'token' in session %}
+    <button type="button" class="btn btn-info dropdown-toggle" style="position:absolute; right:0" data-toggle="dropdown">
+      <img src="{{g.user.profile_picture}}" style="height:25px">
+      {{ g.user.username }}
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+      <li><a href="/logout">Logout</a></li>
+    </ul>
+
+  {% endif %}
+</div>
+</div>
+<style type="text/css">
+  .dropdown-menu {
+    width: 100%;
+    position: absolute;
+    top: 36px;
+    text-align: right;
+  }
+</style>
 {% endblock %}

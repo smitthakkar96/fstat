@@ -10,6 +10,15 @@ STATE = (
 )
 
 
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    username = db.Column(db.Integer, unique=True)
+    email = db.Column(db.String(100), unique=True)
+    profile_picture = db.Column(db.String(1000))
+    token = db.Column(db.String(1000))
+    name = db.Column(db.String(100))
+
+
 class Failure(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     signature = db.Column(db.String(1000), index=True)
