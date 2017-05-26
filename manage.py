@@ -11,6 +11,7 @@ manager = Manager(app)
 manager.add_command('runserver', Server())
 manager.add_command('db', MigrateCommand)
 
+
 @manager.command
 def db_init():
     db.create_all()
