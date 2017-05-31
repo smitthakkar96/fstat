@@ -42,14 +42,19 @@
 
 {% block scripts %}
   {{super()}}
+  <!-- Include Moment.Js -->
   <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 
   <!-- Include Date Range Picker -->
   <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
+
+  <!-- Include Fontawesome -->
   <script src="https://use.fontawesome.com/acfd66e721.js"></script>
 
   <!-- Include tags plugin -->
   <script type="text/javascript" src="/static/js/bootstrap-tagsinput.js"></script>
+
+  <!-- Include app.js -->
   <script type="text/javascript" src="/static/js/app.js"></script>
 {% endblock %}
 
