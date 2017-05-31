@@ -7,14 +7,6 @@ from fstat import db, github
 from model import FailureInstance
 
 
-def x_days_ago(x=1):
-    '''
-    Return timestamp for X days ago
-    '''
-    return (datetime.today().replace(hour=0, minute=0, second=0,
-            microsecond=0) - timedelta(days=x))
-
-
 def parse_start_date(start_date=None):
     if not start_date:
         today = datetime.today().replace(hour=0, minute=0, second=0,
@@ -36,11 +28,6 @@ def parse_end_date(end_date=None):
     return end_date
 
 
-def get_teams():
-    organizations = github.get('user/orgs')
-    return organizations
-
-
 def organization_access_required(org):
     """
     Decorator that can be used to validate the presence of user in a particular organization.
@@ -48,12 +35,12 @@ def organization_access_required(org):
     def decorator(func):
         @wraps(func)
         def wrap(*args, **kwargs):
-            teams = get_teams()
-            for team in teams:
-                if team['login'] == org:
+            orgs = github.get('user/orgs')
+            for org_ in orgs:
+                if org_['login'] == org:
                     return func(*args, **kwargs)
-            return jsonify({"response": "You must be the memeber of \
-                                        gluster to associate the bug."}), 401
+            return jsonify({"response": "You must be the member of \
+                                        gluster organization on Github to associate the bugs"}), 401
         return wrap
     return decorator
 
