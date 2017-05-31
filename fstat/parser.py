@@ -10,7 +10,7 @@ def process_failure(url, job_name, build_info):
     text = requests.get(url, verify=False).text
     accum = []
     for t in text.split('\n'):
-        if t.find("Result: FAIL") != -1:
+        if t.find("Result: FAIL") != -1 or t.find("Finished: ABORTED") != -1:
             for t2 in accum:
                 if t2.find("Wstat") != -1:
                     test_case = re.search('\./tests/.*\.t', t2)
@@ -56,7 +56,7 @@ def get_summary(job_name, num_days):
             if datetime.fromtimestamp(build['timestamp']/1000) < cut_off_date:
                 # stop when timestamp older than cut off date
                 return
-            if build['result'] not in [None, 'SUCCESS', 'ABORTED']:
+            if build['result'] not in [None, 'SUCCESS']:
                 url = ''.join([build['url'], 'consoleText'])
                 if not FailureInstance.query.filter_by(url=url).first():
                     process_failure(url, job_name, build)
