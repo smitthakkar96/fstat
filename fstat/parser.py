@@ -8,12 +8,12 @@ from fstat import app, db, Failure, FailureInstance
 
 def save_failure(signature, url, job_name, build_info):
     failure = Failure.query.filter_by(
-            signature=test_case.group()).first()
+            signature=signature).first()
     # If it doesn't exist, create a job first
     if failure is None:
-        failure = Failure(signature=test_case.group())
+        failure = Failure(signature=signature)
     failure_instance = FailureInstance(url=url,
-                                    job_name=job_name)
+                                       job_name=job_name)
     failure_instance.process_build_info(build_info)
     failure_instance.failure = failure
     try:
@@ -29,7 +29,7 @@ def process_failure(url, job_name, build_info):
     accum = []
     if text.find("Finished: ABORTED") != -1:
         lines = text.split('\n')
-        # Reversing the array of lines to catch the last ran test because of which the run got aborted
+        # Reversing the array to catch the last ran test because of which the run got aborted
         lines.reverse()
         for t2 in lines:
             test_case = re.search('\./tests/.*\.t', t2)
