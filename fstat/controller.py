@@ -83,7 +83,7 @@ def overall_summary():
         failures_ = []
         for failure, count in failures.most_common():
             failures_.append({
-                "signature": "http://git.gluster.org/cgit/glusterfs.git/tree/" + failure.signature,
+                "signature": failure.signature,
                 "count": count
             })
         return jsonify({"response": failures_})
