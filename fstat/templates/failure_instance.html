@@ -16,30 +16,31 @@
     </div>
     <h2>Failure Signature: <a href="http://git.gluster.org/cgit/glusterfs.git/tree/{{ failure.signature }}" target="_blank"><code>{{ failure.signature }}</code></a></h2>
     <div class="row">
-    <div class="col-xs-6">
-      {% include "snippets/date_range.html" %}
+      <div class="col-xs-6">
+        {% include "snippets/date_range.html" %}
+      </div>
+      <div class="col-xs-6">
+        {% include "snippets/branch_filter.html" %}
+      </div>
     </div>
-    <div class="col-xs-6">
-      {% include "snippets/branch_filter.html" %}
-    </div>
-    </div>
-    <table class="table table-bordered">
-      <tr>
-        <th>Job</th>
-        <th>Node</th>
-        <th>Review Information</th>
-        <th>Branch</th>
-        <th>Timestamp</th>
-      </tr>
-      {% for f in failure_instances %}
-      <tr>
-        <td>{{ f.job_name }}</td>
-        <td>{{ f.node }}</td>
-        <td>{% if f.review %}<a href="https://review.gluster.org/{{ f.review }}">{{ f.review }}/{{ f.patchset }}</a>{% endif %}</td>
-        <td>{% if f.branch %}{{ f.branch }}{% endif %}</td>
-        <td><a href="{{ f.url }}">{{ f.timestamp }}</a></td>
-      <tr>
-      {% endfor %}
-    </table>
-   </div>
+      <div class="table-responsive">
+        <table class="table table-bordered">
+          <tr>
+            <th>Job</th>
+            <th>Node</th>
+            <th>Review Information</th>
+            <th>Branch</th>
+            <th>Timestamp</th>
+          </tr>
+          {% for f in failure_instances %}
+          <tr>
+            <td>{{ f.job_name }}</td>
+            <td>{{ f.node }}</td>
+            <td>{% if f.review %}<a href="https://review.gluster.org/{{ f.review }}">{{ f.review }}/{{ f.patchset }}</a>{% endif %}</td>
+            <td>{% if f.branch %}{{ f.branch }}{% endif %}</td>
+            <td><a href="{{ f.url }}">{{ f.timestamp }}</a></td>
+          <tr>
+          {% endfor %}
+        </table>
+      </div>
 {% endblock %}
