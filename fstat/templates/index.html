@@ -44,27 +44,23 @@
         <th>Signature</th>
         <th>Failure Count</th>
         <th>Associated Bugs</th>
-        {% if g.user %}
-        <th></th>
-        {% endif %}
       </tr>
       {% for f, count in failures.most_common(total) %}
       <tr>
         <td><a href="http://git.gluster.org/cgit/glusterfs.git/tree/{{ f.signature }}" target="_blank"><code>{{ f.signature }}</code></a></td>
         <td><a href="{{ url_for('instance_summary', start_date=start_date, end_date=end_date, fid=f.id, branch=request.args.get('branch', 'all')) }}">{{ count }}</a></td>
-        <!--<td>{{ f.bugs | length }}</td>-->
-        {% if not f.bugs %}
-          <td>No Bugs Associated</td>
-        {% else %}
-          <td>
-          {% for bug in f.bugs %}
-            <a href="https://bugzilla.redhat.com/show_bug.cgi?id={{bug.bug_id}}" target="_blank"><code>{{bug.bug_id}}</code></a>
-          {% endfor %}
-          </td>
-        {% endif %}
+        <td>
+          {% if not f.bugs %}
+            No Bugs Associated
+          {% else %}
+            {% for bug in f.bugs %}
+              <a href="https://bugzilla.redhat.com/show_bug.cgi?id={{bug.bug_id}}" target="_blank">{{bug.bug_id}}</a>
+            {% endfor %}
+          {% endif %}
         {% if g.user %}
-          <td><button type="submit" class="btn btn-info" id="associate_bug" data-failure="{{ f.id }}" onclick="showModal({{f.id}}, {{f.get_bug_ids()|safe}})">Manage Assoicated Bugs</button></td>
+          <a onclick="showModal({{f.id}}, {{f.get_bug_ids()|safe}})"><i class="fa fa-pencil" aria-hidden="true" style="cursor: pointer"></i></a>
         {% endif %}
+        </td>
       </tr>
 
       {% endfor %}
@@ -81,7 +77,7 @@
           <h4 class="modal-title">Associate Bug</h4>
         </div>
         <div class="modal-body">
-            <input type="text" class="form-control" placeholder="Bugzilla BugId" id="bugIds">
+            <input type="text" class="form-control" placeholder="Bugzilla Bug ID" id="bugIds">
         </div>
         <div class="modal-footer">
           <button type="submit" class="btn btn-default btn-info" onclick="submit()">Submit</button>

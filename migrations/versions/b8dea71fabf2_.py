@@ -26,5 +26,6 @@ def upgrade():
     sa.PrimaryKeyConstraint('id')
     )
 
+
 def downgrade():
     op.drop_table('bug_failure')
