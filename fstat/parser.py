@@ -27,7 +27,7 @@ def save_failure(signature, url, job_name, build_info):
 def process_failure(url, job_name, build_info):
     text = requests.get(url, verify=False).text
     accum = []
-    if text.find("Finished: ABORTED") != -1:
+    if text.find("Build timed out") and build_info['result'] == 'ABORTED':
         lines = text.split('\n')
         # Reversing the array to catch the last ran test because of which the run got aborted
         lines.reverse()
