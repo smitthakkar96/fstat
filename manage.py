@@ -1,17 +1,15 @@
 #!/usr/bin/env python
 
 from flask_script import Server, Manager
-from fstat import app, db
+from flask_migrate import MigrateCommand
+
+from fstat import app
 from fstat.parser import get_summary
 
 
 manager = Manager(app)
 manager.add_command('runserver', Server())
-
-
-@manager.command
-def db_init():
-    db.create_all()
+manager.add_command('db', MigrateCommand)
 
 
 @manager.option('-n', dest='num_days')
