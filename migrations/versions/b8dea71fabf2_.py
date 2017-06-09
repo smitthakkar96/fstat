@@ -19,9 +19,9 @@ depends_on = None
 def upgrade():
     op.create_table('bug_failure',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('failure_id', sa.Integer(), nullable=True),
-    sa.Column('bug_id', sa.Integer(), nullable=True),
-    sa.Column('created_at', sa.DateTime(), nullable=True),
+    sa.Column('failure_id', sa.Integer(), nullable=False),
+    sa.Column('bug_id', sa.Integer(), nullable=False),
+    sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.ForeignKeyConstraint(['failure_id'], ['failure.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
