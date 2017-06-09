@@ -1,6 +1,5 @@
-from collections import Counter
-
 from flask import render_template, redirect, url_for, request, session, g
+from sqlalchemy import func, case
 
 from fstat import app, db, github
 from model import Failure, FailureInstance, User
@@ -75,12 +74,18 @@ def overall_summary():
     if branch != 'all':
         filters.append(FailureInstance.branch == branch)
 
-    failure_instances = FailureInstance.query.filter(*filters)
-    failures = Counter([x.failure for x in failure_instances])
+    failures = Failure.query \
+                      .with_entities(Failure.id, Failure.signature,
+                                     func.sum(case([(FailureInstance.state == 2, 1)], else_=0))
+                                         .label("failure"),
+                                     func.sum(case([(FailureInstance.state == 3, 1)], else_=0))
+                                         .label("aborted")) \
+                      .filter(*filters).join(FailureInstance) \
+                      .group_by(Failure.id)
+
     return render_template('index.html',
                            num=(end_date - start_date).days,
                            failures=failures,
-                           total=len(failures),
                            end_date=str(end_date.date()),
                            start_date=str(start_date.date()),
                            branches=get_branch_list())
@@ -99,6 +104,7 @@ def instance_summary(fid=None):
     start_date = parse_start_date(request.args.get('start_date'))
     end_date = parse_end_date(request.args.get('end_date'))
     branch = request.args.get('branch', 'all')
+    state = request.args.get('state')
 
     failure = Failure.query.filter_by(id=fid).first_or_404()
     filters = [
@@ -109,6 +115,9 @@ def instance_summary(fid=None):
 
     if branch != 'all':
         filters.append(FailureInstance.branch == branch)
+
+    if state:
+        filters.append(FailureInstance.state == state)
 
     failure_instances = FailureInstance.query.filter(db.and_(*filters))
     return render_template('failure_instance.html',
