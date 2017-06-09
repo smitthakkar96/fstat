@@ -64,6 +64,6 @@ class FailureInstance(db.Model):
 
 class BugFailure(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    failure_id = db.Column(db.Integer, db.ForeignKey('failure.id'))
-    bug_id = db.Column(db.Integer)  # refers to the bug on bugzilla
+    failure_id = db.Column(db.Integer, db.ForeignKey('failure.id'), nullable=False)
+    bug_id = db.Column(db.Integer, nullable=False)  # refers to the bug on bugzilla
     created_at = db.Column(db.DateTime, default=datetime.now)
