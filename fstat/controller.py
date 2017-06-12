@@ -65,11 +65,12 @@ def associate_bug(fid):
     db.session.commit()
     # associate recieved bugIds
     for bug_id in bug_ids:
-        bug_failure = BugFailure()
-        bug_failure.bug_id = bug_id
-        bug_failure.failure_id = fid
-        db.session.add(bug_failure)
-    db.session.commit()
+        if bug_id:
+            bug_failure = BugFailure()
+            bug_failure.bug_id = bug_id
+            bug_failure.failure_id = fid
+            db.session.add(bug_failure)
+        db.session.commit()
     return jsonify({"response": "success"})
 
 
