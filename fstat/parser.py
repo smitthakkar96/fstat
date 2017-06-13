@@ -36,17 +36,17 @@ def process_failure(url, job_name, build_info):
             if test_case:
                 save_failure(test_case.group(), url, job_name, build_info)
                 break
-
-    for t in text.split('\n'):
-        if t.find("Result: FAIL") != -1:
-            for t2 in accum:
-                if t2.find("Wstat") != -1:
-                    test_case = re.search('\./tests/.*\.t', t2)
-                    if test_case:
-                        save_failure(test_case.group(), url, job_name, build_info)
-            accum = []
-        else:
-            accum.append(t)
+    else:
+        for t in text.split('\n'):
+            if t.find("Result: FAIL") != -1:
+                for t2 in accum:
+                    if t2.find("Wstat") != -1:
+                        test_case = re.search('\./tests/.*\.t', t2)
+                        if test_case:
+                            save_failure(test_case.group(), url, job_name, build_info)
+                accum = []
+            else:
+                accum.append(t)
 
 
 def get_summary(job_name, num_days):

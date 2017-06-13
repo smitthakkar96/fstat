@@ -41,15 +41,27 @@
     <div class="table-responsive">    
       <table class="table table-bordered">
         <tr>
+          <th>State</th>
           <th>Signature</th>
           <th>Failure Count</th>
-          <th>Aborted Count</th>
         </tr>
-        {% for fid, signature, count_failure, count_aborted in failures %}
+        {% for fid, signature, failure_count, state in failures %}
         <tr>
+          <td>
+            {% if state == 3 %}
+              <div class="tag tag-warning">
+                <span class="glyphicon glyphicon-remove"></span>
+              </div>
+            {% elif state == 2 %}
+              <div class="tag tag-danger">
+                <span class="glyphicon glyphicon-fire"></span>
+              </div>
+            {% endif %}
+          </td>
+
+
           <td><a href="http://git.gluster.org/cgit/glusterfs.git/tree/{{ signature }}" target="_blank"><code>{{ signature }}</code></a></td>
-          <td><a href="{{ url_for('instance_summary', start_date=start_date, end_date=end_date, fid=fid, state=2,branch=request.args.get('branch', 'all')) }}">{{ count_failure }}</a></td>
-          <td><a href="{{ url_for('instance_summary', start_date=start_date, end_date=end_date, fid=fid, state=3, branch=request.args.get('branch', 'all')) }}">{{ count_aborted }}</a></td>
+          <td><a href="{{ url_for('instance_summary', start_date=start_date, end_date=end_date, fid=fid, branch=request.args.get('branch', 'all')) }}">{{ failure_count }}</a></td>
         <tr>
         {% endfor %}
       </table>
