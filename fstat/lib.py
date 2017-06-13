@@ -1,6 +1,9 @@
+from functools import wraps
 from datetime import datetime, timedelta
 
-from fstat import db
+from flask import jsonify
+
+from fstat import db, github
 from model import FailureInstance
 
 
@@ -23,6 +26,23 @@ def parse_end_date(end_date=None):
     else:
         end_date = datetime.strptime(end_date, '%Y-%m-%d')
     return end_date
+
+
+def organization_access_required(org):
+    """
+    Decorator that can be used to validate the presence of user in a particular organization.
+    """
+    def decorator(func):
+        @wraps(func)
+        def wrap(*args, **kwargs):
+            orgs = github.get('user/orgs')
+            for org_ in orgs:
+                if org_['login'] == org:
+                    return func(*args, **kwargs)
+            return jsonify({"response": "You must be the member of \
+                                        gluster organization on Github to associate the bugs"}), 401
+        return wrap
+    return decorator
 
 
 def get_branch_list(fid=None):

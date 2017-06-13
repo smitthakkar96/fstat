@@ -32,7 +32,7 @@ def process_failure(url, job_name, build_info):
         # Reversing the array to catch the last ran test because of which the run got aborted
         lines.reverse()
         for line in lines:
-            test_case = re.search('\./tests/.*\.t', t2)
+            test_case = re.search('\./tests/.*\.t', line)
             if test_case:
                 save_failure(test_case.group(), url, job_name, build_info)
                 break
