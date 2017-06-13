@@ -100,9 +100,15 @@ def overall_summary():
                       .group_by(Failure.id, FailureInstance.state) \
                       .order_by(desc("failure_count"), desc(Failure.id))
 
+    summary = []
+    for failure in failures:
+        failure = dict(zip(failure.keys(), failure))
+        failure['bugs'] = Failure.get_bug_ids(failure['id'])
+        summary.append(failure)
+
     return render_template('index.html',
                            num=(end_date - start_date).days,
-                           failures=failures,
+                           failures=summary,
                            end_date=str(end_date.date()),
                            start_date=str(start_date.date()),
                            branches=get_branch_list())

@@ -46,53 +46,33 @@
           <th>Failure Count</th>
           <th>Associated Bugs</th>
         </tr>
-        {% for fid, signature, failure_count, state in failures %}
+        {% for failure in failures %}
         <tr>
           <td>
-            {% if state == 3 %}
+            {% if failure["state"] == 3 %}
               <div class="tag tag-warning">
                 <span class="glyphicon glyphicon-remove"></span>
               </div>
-            {% elif state == 2 %}
+            {% elif failure["state"] == 2 %}
               <div class="tag tag-danger">
                 <span class="glyphicon glyphicon-fire"></span>
               </div>
             {% endif %}
           </td>
-          <td><a href="http://git.gluster.org/cgit/glusterfs.git/tree/{{ signature }}" target="_blank"><code>{{ signature }}</code></a></td>
-          <td><a href="{{ url_for('instance_summary', start_date=start_date, end_date=end_date, fid=fid, branch=request.args.get('branch', 'all')) }}">{{ failure_count }}</a></td>
+          <td><a href="http://git.gluster.org/cgit/glusterfs.git/tree/{{ signature }}" target="_blank"><code>{{ failure["signature"] }}</code></a></td>
+          <td><a href="{{ url_for('instance_summary', start_date=start_date, end_date=end_date, fid=failure['id'], branch=request.args.get('branch', 'all')) }}">{{ failure["failure_count"] }}</a></td>
           <td>
-            {% for bug in f.bugs %}
-              <a href="https://bugzilla.redhat.com/show_bug.cgi?id={{bug.bug_id}}" target="_blank">{{bug.bug_id}}</a>
+            {% for bug in failure["bugs"] %}
+              <a href="https://bugzilla.redhat.com/show_bug.cgi?id={{bug.bug_id}}" target="_blank">{{bug}}</a>
             {% endfor %}
             {% if g.user %}
-              <a onclick="listeners.showModal({{f.id}}, {{f.get_bug_ids()|safe}})"><i class="fa fa-pencil" aria-hidden="true" style="cursor: pointer"></i></a>
+              <a onclick="listeners.showModal({{failure['id']}}, {{failure['bugs']|safe}})"><i class="fa fa-pencil" aria-hidden="true" style="cursor: pointer"></i></a>
             {% endif %}
           </td>
-        <tr>
-        {% endfor %}
+        </tr>
+      {% endfor %}
       </table>
     </div>
-      <tr>
-        <th>Signature</th>
-        <th>Failure Count</th>
-        <th>Associated Bugs</th>
-      </tr>
-      {% for f, count in failures.most_common(total) %}
-      <tr>
-        <td><a href="http://git.gluster.org/cgit/glusterfs.git/tree/{{ f.signature }}" target="_blank"><code>{{ f.signature }}</code></a></td>
-        <td><a href="{{ url_for('instance_summary', start_date=start_date, end_date=end_date, fid=f.id, branch=request.args.get('branch', 'all')) }}">{{ count }}</a></td>
-        <td>
-            {% for bug in f.bugs %}
-              <a href="https://bugzilla.redhat.com/show_bug.cgi?id={{bug.bug_id}}" target="_blank">{{bug.bug_id}}</a>
-            {% endfor %}
-        {% if g.user %}
-          <a onclick="listeners.showModal({{f.id}}, {{f.get_bug_ids()|safe}})"><i class="fa fa-pencil" aria-hidden="true" style="cursor: pointer"></i></a>
-        {% endif %}
-        </td>
-      </tr>
-
-      {% endfor %}
     </table>
    </div>
   <!-- Modal -->

@@ -1,13 +1,4 @@
-@media only screen {
-    code {
-        font-size: 0.7em;
-        white-space: pre-line;
-        word-break: break-word;
-        word-wrap: break-word;
-    }
-}
-
-.tag {
+div.tag {
     height: 30px;
     width: 30px;
     text-align: center;
@@ -17,10 +8,19 @@
     margin: auto
 }
 
-.tag-danger {
+div.tag-danger {
     background: #d9534f
 }
 
-.tag-warning {
+div.tag-warning {
     background: #ec971f
+}
+
+@media only screen {
+    .failure-signature-main {
+        font-size: 0.7em;
+        white-space: pre-line;
+        word-break: break-word;
+        word-wrap: break-word;
+    }
 }

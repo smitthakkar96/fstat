@@ -27,8 +27,10 @@ class Failure(db.Model):
                                lazy='dynamic')
     bugs = db.relationship('BugFailure', backref="failure")
 
-    def get_bug_ids(self):
-        return [bug.bug_id for bug in self.bugs]
+    @staticmethod
+    def get_bug_ids(fid):
+        failure = Failure.query.filter_by(id=fid).first()
+        return [bug.bug_id for bug in failure.bugs]
 
 
 class FailureInstance(db.Model):
