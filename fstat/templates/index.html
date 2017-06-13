@@ -50,13 +50,9 @@
         <td><a href="http://git.gluster.org/cgit/glusterfs.git/tree/{{ f.signature }}" target="_blank"><code>{{ f.signature }}</code></a></td>
         <td><a href="{{ url_for('instance_summary', start_date=start_date, end_date=end_date, fid=f.id, branch=request.args.get('branch', 'all')) }}">{{ count }}</a></td>
         <td>
-          {% if not f.bugs %}
-            No Bugs Associated
-          {% else %}
             {% for bug in f.bugs %}
               <a href="https://bugzilla.redhat.com/show_bug.cgi?id={{bug.bug_id}}" target="_blank">{{bug.bug_id}}</a>
             {% endfor %}
-          {% endif %}
         {% if g.user %}
           <a onclick="listeners.showModal({{f.id}}, {{f.get_bug_ids()|safe}})"><i class="fa fa-pencil" aria-hidden="true" style="cursor: pointer"></i></a>
         {% endif %}

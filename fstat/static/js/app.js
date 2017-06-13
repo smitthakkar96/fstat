@@ -42,7 +42,7 @@
                         }
                     });
                 } else {
-                    alert("All BugIDs must be integer.")
+                    alert("All bugs must be numbers.")
                 }
         }
     };
