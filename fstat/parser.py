@@ -12,6 +12,8 @@ def save_failure(signature, url, job_name, build_info):
     # If it doesn't exist, create a job first
     if failure is None:
         failure = Failure(signature=signature)
+        failure.set_state(build_info['result'])
+
     failure_instance = FailureInstance(url=url,
                                        job_name=job_name)
     failure_instance.process_build_info(build_info)

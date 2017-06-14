@@ -22,10 +22,15 @@ class User(db.Model):
 class Failure(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     signature = db.Column(db.String(1000), index=True)
+    state = db.Column(db.Integer)
     failures = db.relationship('FailureInstance',
                                backref='failure',
                                lazy='dynamic')
     bugs = db.relationship('BugFailure', backref="failure")
+
+
+    def set_state(self, state):
+        self.state = STATE.index(state)
 
     @staticmethod
     def get_bug_ids(fid):
@@ -36,7 +41,6 @@ class Failure(db.Model):
 class FailureInstance(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     url = db.Column(db.String(100), index=True)
-    state = db.Column(db.Integer)
     job_name = db.Column(db.String(100), index=True)
     node = db.Column(db.String(100), index=True)
     timestamp = db.Column(db.DateTime, index=True)
@@ -47,7 +51,6 @@ class FailureInstance(db.Model):
     __table__args = (db.UniqueConstraint(url, failure_id))
 
     def process_build_info(self, build):
-        self.state = STATE.index(build['result'])
         self.node = build['builtOn']
         self.timestamp = datetime.fromtimestamp(build['timestamp']/1000)
         try:

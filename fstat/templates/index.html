@@ -38,7 +38,7 @@
         {% include "snippets/branch_filter.html" %}
       </div>
     </div>
-    <div class="table-responsive">    
+    <div class="table-responsive">
       <table class="table table-bordered">
         <tr>
           <th>State</th>
@@ -60,7 +60,7 @@
             {% endif %}
           </td>
           <td><a href="http://git.gluster.org/cgit/glusterfs.git/tree/{{ signature }}" target="_blank"><code>{{ failure["signature"] }}</code></a></td>
-          <td><a href="{{ url_for('instance_summary', start_date=start_date, end_date=end_date, fid=failure['id'], branch=request.args.get('branch', 'all')) }}">{{ failure["failure_count"] }}</a></td>
+          <td><a href="{{ url_for('instance_summary', start_date=start_date, end_date=end_date, fid=failure['id'], state=failure['state'],branch=request.args.get('branch', 'all')) }}">{{ failure["failure_count"] }}</a></td>
           <td>
             {% for bug in failure["bugs"] %}
               <a href="https://bugzilla.redhat.com/show_bug.cgi?id={{bug.bug_id}}" target="_blank">{{bug}}</a>
