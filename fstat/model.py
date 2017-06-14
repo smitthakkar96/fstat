@@ -28,7 +28,6 @@ class Failure(db.Model):
                                lazy='dynamic')
     bugs = db.relationship('BugFailure', backref="failure")
 
-
     def set_state(self, state):
         self.state = STATE.index(state)
 
