@@ -6,13 +6,20 @@ from datetime import timedelta, datetime
 from fstat import app, db, Failure, FailureInstance
 
 
+STATE = (
+    None,
+    'SUCCESS',
+    'FAILURE',
+    'ABORTED',
+)
+
+
 def save_failure(signature, url, job_name, build_info):
-    failure = Failure.query.filter_by(
-            signature=signature).first()
+    failure = Failure.query.filter_by(signature=signature).first()
     # If it doesn't exist, create a job first
     if failure is None:
         failure = Failure(signature=signature)
-        failure.set_state(build_info['result'])
+        failure.state = STATE.index(build_info['result'])
 
     failure_instance = FailureInstance(url=url,
                                        job_name=job_name)

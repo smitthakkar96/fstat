@@ -2,14 +2,6 @@ from fstat import db
 from datetime import datetime
 
 
-STATE = (
-    None,
-    'SUCCESS',
-    'FAILURE',
-    'ABORTED',
-)
-
-
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(100), unique=True)
@@ -27,9 +19,6 @@ class Failure(db.Model):
                                backref='failure',
                                lazy='dynamic')
     bugs = db.relationship('BugFailure', backref="failure")
-
-    def set_state(self, state):
-        self.state = STATE.index(state)
 
     @staticmethod
     def get_bug_ids(fid):
