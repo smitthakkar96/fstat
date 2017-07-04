@@ -1,0 +1,26 @@
+div.tag {
+    height: 30px;
+    width: 30px;
+    text-align: center;
+    font-size: x-large;
+    color: white;
+    border-radius: 5px;
+    margin: auto
+}
+
+div.tag-danger {
+    background: #d9534f
+}
+
+div.tag-warning {
+    background: #ec971f
+}
+
+@media only screen {
+    .failure-signature-main {
+        font-size: 0.7em;
+        white-space: pre-line;
+        word-break: break-word;
+        word-wrap: break-word;
+    }
+}

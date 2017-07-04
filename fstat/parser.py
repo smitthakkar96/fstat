@@ -6,34 +6,56 @@ from datetime import timedelta, datetime
 from fstat import app, db, Failure, FailureInstance
 
 
+STATE = (
+    None,
+    'SUCCESS',
+    'FAILURE',
+    'ABORTED',
+)
+
+
+def save_failure(signature, url, job_name, build_info):
+    failure = Failure.query.filter_by(signature=signature).first()
+    # If it doesn't exist, create a job first
+    if failure is None:
+        failure = Failure(signature=signature)
+        failure.state = STATE.index(build_info['result'])
+
+    failure_instance = FailureInstance(url=url,
+                                       job_name=job_name)
+    failure_instance.process_build_info(build_info)
+    failure_instance.failure = failure
+    try:
+        db.session.add(failure)
+        db.session.add(failure_instance)
+        db.session.commit()
+    except IntegrityError:
+        db.session.rollback()
+
+
 def process_failure(url, job_name, build_info):
     text = requests.get(url, verify=False).text
     accum = []
-    for t in text.split('\n'):
-        if t.find("Result: FAIL") != -1:
-            for t2 in accum:
-                if t2.find("Wstat") != -1:
-                    test_case = re.search('\./tests/.*\.t', t2)
-                    if test_case:
-                        # Check if the Job exists
-                        failure = Failure.query.filter_by(
-                                signature=test_case.group()).first()
-                        # If it doesn't exist, create a job first
-                        if failure is None:
-                            failure = Failure(signature=test_case.group())
-                        failure_instance = FailureInstance(url=url,
-                                                           job_name=job_name)
-                        failure_instance.process_build_info(build_info)
-                        failure_instance.failure = failure
-                        try:
-                            db.session.add(failure)
-                            db.session.add(failure_instance)
-                            db.session.commit()
-                        except IntegrityError:
-                            db.session.rollback()
-            accum = []
-        else:
-            accum.append(t)
+    if text.find("Build timed out") and build_info['result'] == 'ABORTED':
+        lines = text.split('\n')
+        # Reversing the array to catch the last ran test because of which the run got aborted
+        lines.reverse()
+        for line in lines:
+            test_case = re.search('\./tests/.*\.t', line)
+            if test_case:
+                save_failure(test_case.group(), url, job_name, build_info)
+                break
+    else:
+        for t in text.split('\n'):
+            if t.find("Result: FAIL") != -1:
+                for t2 in accum:
+                    if t2.find("Wstat") != -1:
+                        test_case = re.search('\./tests/.*\.t', t2)
+                        if test_case:
+                            save_failure(test_case.group(), url, job_name, build_info)
+                accum = []
+            else:
+                accum.append(t)
 
 
 def get_summary(job_name, num_days):
