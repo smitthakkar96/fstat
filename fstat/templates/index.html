@@ -38,17 +38,54 @@
         {% include "snippets/branch_filter.html" %}
       </div>
     </div>
-    <table class="table table-bordered">
+    <div class="table-responsive">
+      <table class="table table-bordered">
       <tr>
         <th>Signature</th>
         <th>Failure Count</th>
+        <th>Associated Bugs</th>
       </tr>
       {% for f, count in failures.most_common(total) %}
       <tr>
         <td><a href="http://git.gluster.org/cgit/glusterfs.git/tree/{{ f.signature }}" target="_blank"><code>{{ f.signature }}</code></a></td>
         <td><a href="{{ url_for('instance_summary', start_date=start_date, end_date=end_date, fid=f.id, branch=request.args.get('branch', 'all')) }}">{{ count }}</a></td>
-      <tr>
+        <td>
+            {% for bug in f.bugs %}
+              <a href="https://bugzilla.redhat.com/show_bug.cgi?id={{bug.bug_id}}" target="_blank">{{bug.bug_id}}</a>
+            {% endfor %}
+        {% if g.user %}
+          <a onclick="listeners.showModal({{f.id}}, {{f.get_bug_ids()|safe}})"><i class="fa fa-pencil" aria-hidden="true" style="cursor: pointer"></i></a>
+        {% endif %}
+        </td>
+      </tr>
+
       {% endfor %}
     </table>
    </div>
+  <!-- Modal -->
+  <div class="modal fade" id="associate-bug-modal" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Associate Bug</h4>
+        </div>
+        <div class="modal-body">
+            <input type="text" class="form-control" placeholder="Bugzilla Bug ID" id="bugIds">
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-default btn-info" onclick="listeners.submit()">Submit</button>
+          <button type="button" class="btn btn-default btn-danger" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <style>
+    .bootstrap-tagsinput {
+      width: 100%
+    }
+  </style>
 {%- endblock %}
