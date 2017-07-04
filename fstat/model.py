@@ -2,14 +2,6 @@ from fstat import db
 from datetime import datetime
 
 
-STATE = (
-    None,
-    'SUCCESS',
-    'FAILURE',
-    'ABORTED',
-)
-
-
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(100), unique=True)
@@ -22,19 +14,21 @@ class User(db.Model):
 class Failure(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     signature = db.Column(db.String(1000), index=True)
+    state = db.Column(db.Integer)
     failures = db.relationship('FailureInstance',
                                backref='failure',
                                lazy='dynamic')
     bugs = db.relationship('BugFailure', backref="failure")
 
-    def get_bug_ids(self):
-        return [bug.bug_id for bug in self.bugs]
+    @staticmethod
+    def get_bug_ids(fid):
+        failure = Failure.query.filter_by(id=fid).first()
+        return [bug.bug_id for bug in failure.bugs]
 
 
 class FailureInstance(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     url = db.Column(db.String(100), index=True)
-    state = db.Column(db.Integer)
     job_name = db.Column(db.String(100), index=True)
     node = db.Column(db.String(100), index=True)
     timestamp = db.Column(db.DateTime, index=True)
@@ -57,7 +51,6 @@ class FailureInstance(db.Model):
         }
 
     def process_build_info(self, build):
-        self.state = STATE.index(build['result'])
         self.node = build['builtOn']
         self.timestamp = datetime.fromtimestamp(build['timestamp']/1000)
         try:

@@ -1,4 +1,5 @@
 from flask import render_template, redirect, url_for, request, session, g, jsonify
+from sqlalchemy import func, desc
 
 from fstat import app, db, github
 from model import Failure, FailureInstance, User, BugFailure
@@ -92,22 +93,33 @@ def overall_summary():
     if branch != 'all':
         filters.append(FailureInstance.branch == branch)
 
-    failure_instances = FailureInstance.query.filter(*filters)
+    failures = Failure.query \
+                      .with_entities(Failure.id, Failure.signature,
+                                     func.count(Failure.id).label('failure_count'),
+                                     Failure.state) \
+                      .filter(*filters).join(FailureInstance) \
+                      .group_by(Failure.id) \
+                      .order_by(desc("failure_count"), desc(Failure.id))
 
-    failures = Counter([x.failure for x in failure_instances])
-    if request.endpoint == 'api:failures':
-        failures_ = []
-        for failure, count in failures.most_common():
+    if request.endpoint == 'api':
+        failures_  = []
+        for failure in failures:
             failures_.append({
-                "signature": failure.signature,
-                "count": count
+                "state": failure['state'],
+                "signature": failure['signature'],
+                "failure_count": failure["failure_count"]
             })
         return jsonify({"response": failures_})
 
+    summary = []
+    for failure in failures:
+        failure = dict(zip(failure.keys(), failure))
+        failure['bugs'] = Failure.get_bug_ids(failure['id'])
+        summary.append(failure)
+
     return render_template('index.html',
                            num=(end_date - start_date).days,
-                           failures=failures,
-                           total=len(failures),
+                           failures=summary,
                            end_date=str(end_date.date()),
                            start_date=str(start_date.date()),
                            branches=get_branch_list())
