@@ -101,21 +101,15 @@ def overall_summary():
                       .group_by(Failure.id) \
                       .order_by(desc("failure_count"), desc(Failure.id))
 
-    if request.endpoint == 'api':
-        failures_  = []
-        for failure in failures:
-            failures_.append({
-                "state": failure['state'],
-                "signature": failure['signature'],
-                "failure_count": failure["failure_count"]
-            })
-        return jsonify({"response": failures_})
 
     summary = []
     for failure in failures:
         failure = dict(zip(failure.keys(), failure))
         failure['bugs'] = Failure.get_bug_ids(failure['id'])
         summary.append(failure)
+
+    if request.endpoint == 'api:failures':
+        return jsonify({"response": summary})
 
     return render_template('index.html',
                            num=(end_date - start_date).days,
