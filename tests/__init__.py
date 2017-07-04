@@ -1,5 +1,3 @@
-import os
-
 from fstat.parser import get_summary
 from fstat import app, db
 

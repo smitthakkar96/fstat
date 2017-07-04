@@ -101,7 +101,6 @@ def overall_summary():
                       .group_by(Failure.id) \
                       .order_by(desc("failure_count"), desc(Failure.id))
 
-
     summary = []
     for failure in failures:
         failure = dict(zip(failure.keys(), failure))
