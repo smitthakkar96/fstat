@@ -38,11 +38,11 @@
                             location.reload();
                         },
                         error: function(err, status, xhr){
-                            alert(err.response, 3000);
+                            alert(err.response);
                         }
                     });
                 } else {
-                    alert("All bugs must be numbers.", 3000);
+                    alert("All bugs must be numbers.");
                 }
         }
     };
