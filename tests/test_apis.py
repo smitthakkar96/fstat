@@ -25,10 +25,13 @@ class TestRestfulApis(unittest.TestCase):
         assert response.status_code == 200
         data = json.loads(response.data)
         assert len(data['response']) > 0
+        expected_keys = ['id', 'state', 'signature', 'bugs', 'failure_count']
+        for key in expected_keys:
+            assert key in data['response'][0]
 
     def test_get_failure_instances_route(self):
         """ Tests get failure instances api """
-        endpoint = '/api/failure/{}'.format(1)
+        endpoint = '/api/failure/{}'.format(11)
         query_string_params = {
             'start_date': str(datetime.today() - timedelta(days=7)).split(" "),
             'end_date': str(datetime.today()).split(" "),
@@ -39,3 +42,6 @@ class TestRestfulApis(unittest.TestCase):
         assert response.status_code == 200
         data = json.loads(response.data)
         assert isinstance(data['response'], list)
+        expected_keys = ['node', 'url', 'timestamp', 'failure_id', 'branch', 'patchset', 'job_name']
+        for key in expected_keys:
+            assert key in data['response'][0]

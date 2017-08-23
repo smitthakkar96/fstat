@@ -41,7 +41,6 @@ class FailureInstance(db.Model):
     def as_dict(self):
         return {
             "url": self.url,
-            "state": self.state,
             "job_name": self.job_name,
             "node": self.node,
             "timestamp": self.timestamp,
