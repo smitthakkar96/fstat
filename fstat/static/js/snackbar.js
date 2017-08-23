@@ -1,5 +1,3 @@
-$("body").prepend('<div id="snackbar"></div>')
-
 showSnackBar = function(text, timeout=null) {
   var snackbar = document.getElementById("snackbar");
   snackbar.innerText = text;
