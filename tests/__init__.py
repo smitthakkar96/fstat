@@ -1,7 +1,6 @@
 import factory
 from datetime import datetime
 
-from fstat.parser import get_summary
 from fstat import app, db
 from fstat.model import Failure, FailureInstance
 
@@ -16,6 +15,7 @@ class FailureFactory(factory.alchemy.SQLAlchemyModelFactory):
     signature = factory.Faker('text')
     state = 2
 
+
 class FailureInstanceFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
         model = FailureInstance
@@ -26,6 +26,7 @@ class FailureInstanceFactory(factory.alchemy.SQLAlchemyModelFactory):
     job_name = 'regression-test-burn-in'
     branch = 'master'
     failure = factory.SubFactory(FailureFactory)
+
 
 with app.app_context():
     db.create_all()
