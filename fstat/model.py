@@ -38,6 +38,17 @@ class FailureInstance(db.Model):
     failure_id = db.Column(db.Integer, db.ForeignKey('failure.id'))
     __table__args = (db.UniqueConstraint(url, failure_id))
 
+    def as_dict(self):
+        return {
+            "url": self.url,
+            "job_name": self.job_name,
+            "node": self.node,
+            "timestamp": self.timestamp,
+            "patchset": self.patchset,
+            "branch": self.branch,
+            "failure_id": self.failure_id
+        }
+
     def process_build_info(self, build):
         self.node = build['builtOn']
         self.timestamp = datetime.fromtimestamp(build['timestamp']/1000)

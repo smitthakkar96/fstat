@@ -42,7 +42,7 @@
                         }
                     });
                 } else {
-                    alert("All bugs must be numbers.")
+                    alert("All bugs must be numbers.");
                 }
         }
     };

@@ -73,6 +73,7 @@ def associate_bug(fid):
 
 
 @app.route('/summary')
+@app.route('/api/failures', endpoint='api:failures')
 def overall_summary():
     '''
     Shows overall summary
@@ -106,6 +107,9 @@ def overall_summary():
         failure['bugs'] = Failure.get_bug_ids(failure['id'])
         summary.append(failure)
 
+    if request.endpoint == 'api:failures':
+        return jsonify({"response": summary})
+
     return render_template('index.html',
                            num=(end_date - start_date).days,
                            failures=summary,
@@ -115,6 +119,7 @@ def overall_summary():
 
 
 @app.route('/failure/<int:fid>')
+@app.route('/api/failure/<int:fid>', endpoint='api:failure_instances')
 def instance_summary(fid=None):
     '''
     Shows instance summary for particular failure
@@ -139,6 +144,10 @@ def instance_summary(fid=None):
         filters.append(FailureInstance.branch == branch)
 
     failure_instances = FailureInstance.query.filter(db.and_(*filters))
+    if request.endpoint == 'api:failure_instances':
+        failure_instances = [failure_instance.as_dict() for failure_instance in failure_instances]
+        return jsonify({"response": failure_instances})
+
     return render_template('failure_instance.html',
                            failure=failure,
                            branches=get_branch_list(fid),
