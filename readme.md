@@ -11,7 +11,7 @@ Fstat tracks the failures from build.gluster.org.
 ## Using fstat
 - Run migrations and setup database ``` python manage.py db upgrade ```
 - To serve the fstat app on localhost run ``` python manage.py runserver ```
-- Use application.cfg to put all your development keys and debug flags
+- Create application.cfg and add ``` DEBUG=True ``` to it to enable debug mode for your flask app.
 - To fetch failures from build.gluster.org run ``` python manage.py proccess_jobs -n <number_of_days> -j <job_name> ```
 - By default fstat reads and writes the data into sqlite but it can be overriden in your application.cfg.
 
