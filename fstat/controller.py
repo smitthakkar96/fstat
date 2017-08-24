@@ -1,7 +1,5 @@
-from collections import Counter
-
-from flask import render_template, redirect, url_for, request, session, g
-from flask import jsonify
+from flask import render_template, redirect, url_for, request, session, g, jsonify
+from sqlalchemy import func, desc
 
 from fstat import app, db, github
 from model import Failure, FailureInstance, User, BugFailure
@@ -75,6 +73,7 @@ def associate_bug(fid):
 
 
 @app.route('/summary')
+@app.route('/api/failures', endpoint='api:failures')
 def overall_summary():
     '''
     Shows overall summary
@@ -94,18 +93,33 @@ def overall_summary():
     if branch != 'all':
         filters.append(FailureInstance.branch == branch)
 
-    failure_instances = FailureInstance.query.filter(*filters)
-    failures = Counter([x.failure for x in failure_instances])
+    failures = Failure.query \
+                      .with_entities(Failure.id, Failure.signature,
+                                     func.count(Failure.id).label('failure_count'),
+                                     Failure.state) \
+                      .filter(*filters).join(FailureInstance) \
+                      .group_by(Failure.id) \
+                      .order_by(desc("failure_count"), desc(Failure.id))
+
+    summary = []
+    for failure in failures:
+        failure = dict(zip(failure.keys(), failure))
+        failure['bugs'] = Failure.get_bug_ids(failure['id'])
+        summary.append(failure)
+
+    if request.endpoint == 'api:failures':
+        return jsonify({"response": summary})
+
     return render_template('index.html',
                            num=(end_date - start_date).days,
-                           failures=failures,
-                           total=len(failures),
+                           failures=summary,
                            end_date=str(end_date.date()),
                            start_date=str(start_date.date()),
                            branches=get_branch_list())
 
 
 @app.route('/failure/<int:fid>')
+@app.route('/api/failure/<int:fid>', endpoint='api:failure_instances')
 def instance_summary(fid=None):
     '''
     Shows instance summary for particular failure
@@ -130,6 +144,10 @@ def instance_summary(fid=None):
         filters.append(FailureInstance.branch == branch)
 
     failure_instances = FailureInstance.query.filter(db.and_(*filters))
+    if request.endpoint == 'api:failure_instances':
+        failure_instances = [failure_instance.as_dict() for failure_instance in failure_instances]
+        return jsonify({"response": failure_instances})
+
     return render_template('failure_instance.html',
                            failure=failure,
                            branches=get_branch_list(fid),
